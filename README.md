@@ -180,7 +180,7 @@ export class UsersController {
 
 Los controllers en NestJS desempeñan un papel crucial en la estructura de una aplicación, organizando la lógica de enrutamiento y asegurando que las solicitudes sean manejadas de manera eficiente. La separación clara entre la lógica de negocio, manejada por los servicios, y la lógica de enrutamiento y manejo de solicitudes, manejada por los controladores, es una de las mejores prácticas que NestJS fomenta para construir aplicaciones escalables y mantenibles.
 
-## Providers
+## Providers o Servicios
 
 En NestJS, los providers son conceptos centrales que pueden tomar varias formas, como servicios, repositorios, fábricas, helpers, y más. Su propósito principal es encapsular y organizar la lógica de negocio, operaciones de base de datos o cualquier funcionalidad específica, permitiendo su reutilización a través de la aplicación. Los providers son inyectables, lo que significa que NestJS puede automáticamente instanciarlos y resolver sus dependencias sin necesidad de hacerlo manualmente, gracias a su sistema de Inyección de Dependencias.
 
