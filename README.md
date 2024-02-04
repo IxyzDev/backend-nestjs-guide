@@ -502,6 +502,12 @@ npm i -g @nestjs/cli
 nest new project-name
 ```
 
+### Iniciar el servidor
+
+```bash
+npm run start:dev
+```
+
 ### Creación de un módulo
 
 ```bash
