@@ -486,7 +486,84 @@ export class AppController {
 
 Los microservicios en NestJS permiten construir aplicaciones complejas y escalables dividiéndolas en servicios más pequeños y manejables, cada uno con su propia responsabilidad. La comunicación entre servicios se maneja de manera eficiente a través de patrones y transportes definidos, facilitando la integración y el mantenimiento de la aplicación.
 
-## Falta servicios
+## Validaciones
+
+NestJS se integra eficazmente con bibliotecas de terceros como `class-validator` y `class-transformer`, que juntas proporcionan una solución robusta para la validación y transformación de datos de entrada. Estas herramientas son especialmente útiles cuando se trabaja con DTOs (Data Transfer Objects), permitiendo validar y transformar los datos entrantes de una solicitud antes de que lleguen a los controladores o servicios, asegurando así que la lógica de negocio maneje datos correctos y bien formados.
+
+### class-validator
+
+`class-validator` utiliza decoradores para declarar las reglas de validación en las clases DTO. Esto permite una validación automática y declarativa de los datos entrantes basada en las reglas definidas, facilitando la implementación de una lógica de validación compleja de manera sencilla y mantenible.
+
+[Repositorio de class-validator](https://github.com/typestack/class-validator)
+
+**Ejemplo**:
+
+```typescript
+import { IsInt, IsString, MinLength, MaxLength, IsOptional } from 'class-validator';
+
+export class CreateBookDto {
+  @IsString()
+  @MinLength(2)
+  @MaxLength(100)
+  title: string;
+
+  @IsString()
+  @MinLength(2)
+  @MaxLength(100)
+  author: string;
+
+  @IsInt()
+  @IsOptional()
+  year?: number;
+}
+```
+
+### class-transformer
+
+`class-transformer` permite transformar objetos planos a instancias de clases y viceversa, además de exponer decoradores para manipular cómo se realizan estas transformaciones. Esto es útil para aplicar lógica de transformación durante el proceso de mapeo de datos, como excluir ciertos campos de los resultados o transformar tipos de datos.
+
+[Repositorio de class-transformer](https://github.com/typestack/class-transformer)
+
+**Ejemplo**:
+
+```typescript
+import { Type } from 'class-transformer';
+import { ValidateNested } from 'class-validator';
+import { CreateBookDto } from './create-book.dto';
+
+export class CreateLibraryDto {
+  @IsString()
+  name: string;
+
+  @ValidateNested({ each: true })
+  @Type(() => CreateBookDto)
+  books: CreateBookDto[];
+}
+```
+
+### Integración en NestJS
+
+NestJS facilita la integración de `class-validator` y `class-transformer` mediante el uso de pipes globales, como `ValidationPipe`, que automáticamente valida y transforma los datos de entrada de las solicitudes basándose en los DTOs definidos.
+
+**Ejemplo de uso en un controlador**:
+
+```typescript
+import { Body, Controller, Post, UsePipes, ValidationPipe } from '@nestjs/common';
+import { CreateBookDto } from './create-book.dto';
+
+@Controller('books')
+export class BooksController {
+  @Post()
+  @UsePipes(new ValidationPipe())
+  create(@Body() createBookDto: CreateBookDto) {
+    // Lógica para crear el libro
+  }
+}
+```
+
+En este ejemplo, `ValidationPipe` se usa para validar automáticamente los datos entrantes contra las reglas definidas en `CreateBookDto`. Si los datos no cumplen con las reglas, NestJS arroja una excepción y devuelve un error al cliente antes de que el controlador maneje la solicitud, asegurando que solo se procesen datos válidos.
+
+La combinación de `class-validator` y `class-transformer` con las capacidades nativas de NestJS para la validación y transformación de datos ofrece un patrón potente y flexible para manejar la validación y transformación de datos de entrada, promoviendo prácticas de codificación seguras y eficientes.
 
 ## Comandos de NestJS
 
